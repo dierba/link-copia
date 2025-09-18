@@ -5,46 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Convite para o Grupo</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f0f2f5;
-            color: #333;
+            color: #1c1e21;
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
         }
         .container {
             max-width: 400px;
-            padding: 30px;
+            width: 100%;
+            padding: 40px 30px;
             background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         h1 {
-            font-size: 1.5em;
+            font-size: 1.6em;
+            font-weight: 700;
             margin-bottom: 10px;
         }
         p {
             font-size: 1em;
-            color: #666;
+            color: #606770;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        .step {
             margin-bottom: 20px;
+            text-align: left;
+        }
+        .step-label {
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        .copy-area {
+            display: flex;
+            gap: 10px;
         }
         .link-box {
-            width: 100%;
+            flex-grow: 1;
             padding: 12px;
             font-size: 1em;
-            text-align: center;
-            border: 1px solid #ccc;
+            text-align: left;
+            border: 1px solid #dddfe2;
             border-radius: 8px;
-            background-color: #f9f9f9;
+            background-color: #f5f6f7;
             color: #333;
-            margin-bottom: 20px;
-            box-sizing: border-box;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .copy-button {
+            padding: 12px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
         }
         .action-button {
             display: inline-block;
@@ -53,12 +94,16 @@
             font-size: 1.1em;
             font-weight: bold;
             color: #fff;
-            background-color: #25D366; /* Cor do WhatsApp */
+            background-color: #25D366;
             border: none;
             border-radius: 8px;
             text-decoration: none;
             cursor: pointer;
             box-sizing: border-box;
+            transition: background-color 0.2s;
+        }
+        .action-button:hover {
+            background-color: #1da851;
         }
         .hidden {
             display: none;
@@ -67,60 +112,63 @@
 </head>
 <body>
     <div class="container">
-        <div id="loading-message">
-            <h1>Link copiado com sucesso!</h1>
-            <p>Aguarde, estamos te redirecionando para o grupo...</p>
+        <img src="https://i.imgur.com/ZytfR9s.png" alt="Avatar" class="avatar">
+
+        <h1>Quase lá!</h1>
+        <p>A cópia automática não é permitida neste navegador. Siga os passos abaixo:</p>
+
+        <div class="step">
+            <div class="step-label">Passo 1: Copie o link do grupo</div>
+            <div class="copy-area">
+                <input type="text" id="link-input" class="link-box" readonly onclick="this.select();">
+                <button class="copy-button" onclick="copiarLinkManualmente()">Copiar</button>
+            </div>
         </div>
 
-        <div id="fallback-message" class="hidden">
-            <h1>Selcione e Copie o link do grupo</h1>
-            <p>A cópia automática não funciona neste navegador. Por favor, copie o link abaixo e cole no seu navegador principal ou clique no botão.</p>
-            <input type="text" id="link-input" class="link-box" readonly>
+        <div class="step">
+            <div class="step-label">Passo 2: Entre no grupo</div>
             <a id="action-link" href="#" class="action-button">Abrir no WhatsApp</a>
         </div>
     </div>
 
     <script>
         // ----------------------------------------------------
-        // COLE O LINK DO SEU GRUPO AQUI DENTRO DAS ASPAS
+        // COLE O LINK DO SEU GRUPO AQUI
         // ----------------------------------------------------
         const linkDoGrupo = "https://chat.whatsapp.com/KSND2D1HkUM8uQ97ZcKaR6";
 
-        function redirecionar() {
-            window.location.href = linkDoGrupo;
-        }
+        // Preenche os campos da página com o link
+        const linkInput = document.getElementById('link-input');
+        const actionLink = document.getElementById('action-link');
+        linkInput.value = linkDoGrupo;
+        actionLink.href = linkDoGrupo;
 
-        async function tentarCopiar() {
-            const loadingMessage = document.getElementById('loading-message');
-            const fallbackMessage = document.getElementById('fallback-message');
-            const linkInput = document.getElementById('link-input');
-            const actionLink = document.getElementById('action-link');
+        // Função para o botão "Copiar"
+        function copiarLinkManualmente() {
+            const copyButton = document.querySelector('.copy-button');
             
-            linkInput.value = linkDoGrupo;
-            actionLink.href = linkDoGrupo; // Define o link no botão
+            // Tenta copiar para a área de transferência
+            navigator.clipboard.writeText(linkDoGrupo).then(() => {
+                // Sucesso
+                copyButton.innerText = 'Copiado!';
+                copyButton.style.backgroundColor = '#28a745'; // Verde
+            }).catch(err => {
+                // Falha (comum no TikTok/Instagram)
+                console.error('Falha ao tentar copiar: ', err);
+                copyButton.innerText = 'Falhou!';
+                copyButton.style.backgroundColor = '#dc3545'; // Vermelho
+            });
 
-            if (!navigator.clipboard) {
-                mostrarFallback();
-                return;
-            }
-
-            try {
-                await navigator.clipboard.writeText(linkDoGrupo);
-                console.log('Link copiado com sucesso!');
-                setTimeout(redirecionar, 1500); // Redireciona após o sucesso
-            } catch (err) {
-                console.error('Falha ao copiar:', err);
-                mostrarFallback(); // Mostra a mensagem de fallback se falhar
-            }
-        }
-        
-        function mostrarFallback() {
-            document.getElementById('loading-message').classList.add('hidden');
-            document.getElementById('fallback-message').classList.remove('hidden');
-            // Nenhum redirecionamento automático aqui. O usuário decide.
+            // Restaura o botão após 2 segundos
+            setTimeout(() => {
+                copyButton.innerText = 'Copiar';
+                copyButton.style.backgroundColor = '#007bff'; // Azul original
+            }, 2000);
         }
 
-        window.onload = tentarCopiar;
+        // Esta versão da página é o "fallback", então não precisamos
+        // mais da lógica de tentar copiar no início. A página já
+        // é a solução para quando a cópia automática falha.
     </script>
 </body>
 </html>
