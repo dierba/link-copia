@@ -39,22 +39,17 @@
         h1 {
             font-size: 1.6em;
             font-weight: 700;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 1em;
-            color: #606770;
             margin-bottom: 25px;
-            line-height: 1.5;
         }
         .step {
-            margin-bottom: 20px;
-            text-align: left;
+            margin-bottom: 25px;
         }
         .step-label {
             font-weight: 700;
+            font-size: 1.1em;
             color: #000;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            text-align: left;
         }
         .copy-area {
             display: flex;
@@ -87,26 +82,20 @@
         .copy-button:hover {
             background-color: #0056b3;
         }
-        .action-button {
-            display: inline-block;
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1em;
-            font-weight: bold;
-            color: #fff;
-            background-color: #25D366;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: background-color 0.2s;
+        .instructions {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+            text-align: left;
+            font-size: 1em;
+            color: #606770;
         }
-        .action-button:hover {
-            background-color: #1da851;
+        .instructions li {
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
-        .hidden {
-            display: none;
+        .instructions strong {
+            color: #1c1e21;
         }
     </style>
 </head>
@@ -114,8 +103,7 @@
     <div class="container">
         <img src="https://i.imgur.com/ZytfR9s.png" alt="Avatar" class="avatar">
 
-        <h1>Quase lá!</h1>
-        <p>A cópia automática não é permitida neste navegador. Siga os passos abaixo:</p>
+        <h1>Siga os Passos Abaixo</h1>
 
         <div class="step">
             <div class="step-label">Passo 1: Copie o link do grupo</div>
@@ -126,9 +114,14 @@
         </div>
 
         <div class="step">
-            <div class="step-label">Passo 2: Entre no grupo</div>
-            <a id="action-link" href="#" class="action-button">Abrir no WhatsApp</a>
+            <div class="step-label">Passo 2: Cole no WhatsApp para entrar</div>
+             <ul class="instructions">
+                <li><strong>1.</strong> Abra o seu WhatsApp.</li>
+                <li><strong>2.</strong> Escolha qualquer conversa e <strong>cole</strong> o link que você copiou.</li>
+                <li><strong>3.</strong> O link vai aparecer azul na conversa. Agora é só <strong>clicar nele</strong> para entrar no grupo!</li>
+            </ul>
         </div>
+
     </div>
 
     <script>
@@ -137,38 +130,23 @@
         // ----------------------------------------------------
         const linkDoGrupo = "https://chat.whatsapp.com/KSND2D1HkUM8uQ97ZcKaR6";
 
-        // Preenche os campos da página com o link
-        const linkInput = document.getElementById('link-input');
-        const actionLink = document.getElementById('action-link');
-        linkInput.value = linkDoGrupo;
-        actionLink.href = linkDoGrupo;
+        document.getElementById('link-input').value = linkDoGrupo;
 
-        // Função para o botão "Copiar"
         function copiarLinkManualmente() {
             const copyButton = document.querySelector('.copy-button');
-            
-            // Tenta copiar para a área de transferência
             navigator.clipboard.writeText(linkDoGrupo).then(() => {
-                // Sucesso
                 copyButton.innerText = 'Copiado!';
-                copyButton.style.backgroundColor = '#28a745'; // Verde
+                copyButton.style.backgroundColor = '#28a745';
             }).catch(err => {
-                // Falha (comum no TikTok/Instagram)
                 console.error('Falha ao tentar copiar: ', err);
                 copyButton.innerText = 'Falhou!';
-                copyButton.style.backgroundColor = '#dc3545'; // Vermelho
+                copyButton.style.backgroundColor = '#dc3545';
             });
-
-            // Restaura o botão após 2 segundos
             setTimeout(() => {
                 copyButton.innerText = 'Copiar';
-                copyButton.style.backgroundColor = '#007bff'; // Azul original
+                copyButton.style.backgroundColor = '#007bff';
             }, 2000);
         }
-
-        // Esta versão da página é o "fallback", então não precisamos
-        // mais da lógica de tentar copiar no início. A página já
-        // é a solução para quando a cópia automática falha.
     </script>
 </body>
 </html>
