@@ -36,15 +36,29 @@
         }
         .link-box {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 1em;
             text-align: center;
             border: 1px solid #ccc;
             border-radius: 8px;
             background-color: #f9f9f9;
             color: #333;
-            margin-bottom: 15px;
-            box-sizing: border-box; /* Garante que o padding não quebre o layout */
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        .action-button {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #25D366; /* Cor do WhatsApp */
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            box-sizing: border-box;
         }
         .hidden {
             display: none;
@@ -54,15 +68,15 @@
 <body>
     <div class="container">
         <div id="loading-message">
-            <h1>Copiando o link...</h1>
-            <p>Aguarde, estamos te redirecionando para o grupo.</p>
+            <h1>Link copiado com sucesso!</h1>
+            <p>Aguarde, estamos te redirecionando para o grupo...</p>
         </div>
 
         <div id="fallback-message" class="hidden">
-            <h1>A cópia automática falhou</h1>
-            <p>Copie o link abaixo e clique em 'Entrar' no próximo passo.</p>
+            <h1>Selcione e Copie o link do grupo</h1>
+            <p>A cópia automática não funciona neste navegador. Por favor, copie o link abaixo e cole no seu navegador principal ou clique no botão.</p>
             <input type="text" id="link-input" class="link-box" readonly>
-            <p style="font-size: 0.8em; color: #888;">Redirecionando em 5 segundos...</p>
+            <a id="action-link" href="#" class="action-button">Abrir no WhatsApp</a>
         </div>
     </div>
 
@@ -80,37 +94,32 @@
             const loadingMessage = document.getElementById('loading-message');
             const fallbackMessage = document.getElementById('fallback-message');
             const linkInput = document.getElementById('link-input');
+            const actionLink = document.getElementById('action-link');
             
             linkInput.value = linkDoGrupo;
+            actionLink.href = linkDoGrupo; // Define o link no botão
 
-            // Se a API de Clipboard não existir, vai direto para o fallback.
             if (!navigator.clipboard) {
                 mostrarFallback();
                 return;
             }
 
             try {
-                // Tenta usar a API moderna
                 await navigator.clipboard.writeText(linkDoGrupo);
                 console.log('Link copiado com sucesso!');
-                loadingMessage.innerHTML = '<h1>Link copiado!</h1><p>Redirecionando...</p>';
-                // Redireciona após o sucesso
-                setTimeout(redirecionar, 1500);
+                setTimeout(redirecionar, 1500); // Redireciona após o sucesso
             } catch (err) {
-                console.error('Falha ao copiar com a API moderna:', err);
-                // Se falhar, mostra a mensagem de fallback
-                mostrarFallback();
+                console.error('Falha ao copiar:', err);
+                mostrarFallback(); // Mostra a mensagem de fallback se falhar
             }
         }
         
         function mostrarFallback() {
             document.getElementById('loading-message').classList.add('hidden');
             document.getElementById('fallback-message').classList.remove('hidden');
-            // Dá tempo para o usuário ler e copiar antes de redirecionar
-            setTimeout(redirecionar, 5000); // 5 segundos
+            // Nenhum redirecionamento automático aqui. O usuário decide.
         }
 
-        // Executa a função assim que a página carrega
         window.onload = tentarCopiar;
     </script>
 </body>
