@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copiando convite...</title>
+    <title>Convite para o Grupo</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -12,51 +12,106 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f0f2f5;
             color: #333;
             text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
         .container {
-            padding: 20px;
+            max-width: 400px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         h1 {
             font-size: 1.5em;
+            margin-bottom: 10px;
         }
         p {
             font-size: 1em;
             color: #666;
+            margin-bottom: 20px;
+        }
+        .link-box {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: #333;
+            margin-bottom: 15px;
+            box-sizing: border-box; /* Garante que o padding não quebre o layout */
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Link do grupo copiado com sucesso!</h1>
-        <p>Estamos te redirecionando para o grupo...</p>
+        <div id="loading-message">
+            <h1>Copiando o link...</h1>
+            <p>Aguarde, estamos te redirecionando para o grupo.</p>
+        </div>
+
+        <div id="fallback-message" class="hidden">
+            <h1>A cópia automática falhou</h1>
+            <p>Copie o link abaixo e clique em 'Entrar' no próximo passo.</p>
+            <input type="text" id="link-input" class="link-box" readonly>
+            <p style="font-size: 0.8em; color: #888;">Redirecionando em 5 segundos...</p>
+        </div>
     </div>
 
     <script>
         // ----------------------------------------------------
         // COLE O LINK DO SEU GRUPO AQUI DENTRO DAS ASPAS
         // ----------------------------------------------------
-        const linkParaCopiar = "https://chat.whatsapp.com/KSND2D1HkUM8uQ97ZcKaR6";
+        const linkDoGrupo = "https://chat.whatsapp.com/KSND2D1HkUM8uQ97ZcKaR6";
 
-        // Função para copiar e redirecionar
-        function copiarERedirecionar() {
-            // Copia o link para a área de transferência
-            navigator.clipboard.writeText(linkParaCopiar).then(() => {
-                // Se a cópia funcionar, espera 1.5 segundos e redireciona
-                setTimeout(() => {
-                    window.location.href = linkParaCopiar;
-                }, 1500); // 1500ms = 1.5 segundos
-            }).catch(err => {
-                // Se a cópia falhar (em navegadores antigos/inseguros), apenas redireciona
-                console.error('Falha ao copiar: ', err);
-                window.location.href = linkParaCopiar;
-            });
+        function redirecionar() {
+            window.location.href = linkDoGrupo;
+        }
+
+        async function tentarCopiar() {
+            const loadingMessage = document.getElementById('loading-message');
+            const fallbackMessage = document.getElementById('fallback-message');
+            const linkInput = document.getElementById('link-input');
+            
+            linkInput.value = linkDoGrupo;
+
+            // Se a API de Clipboard não existir, vai direto para o fallback.
+            if (!navigator.clipboard) {
+                mostrarFallback();
+                return;
+            }
+
+            try {
+                // Tenta usar a API moderna
+                await navigator.clipboard.writeText(linkDoGrupo);
+                console.log('Link copiado com sucesso!');
+                loadingMessage.innerHTML = '<h1>Link copiado!</h1><p>Redirecionando...</p>';
+                // Redireciona após o sucesso
+                setTimeout(redirecionar, 1500);
+            } catch (err) {
+                console.error('Falha ao copiar com a API moderna:', err);
+                // Se falhar, mostra a mensagem de fallback
+                mostrarFallback();
+            }
+        }
+        
+        function mostrarFallback() {
+            document.getElementById('loading-message').classList.add('hidden');
+            document.getElementById('fallback-message').classList.remove('hidden');
+            // Dá tempo para o usuário ler e copiar antes de redirecionar
+            setTimeout(redirecionar, 5000); // 5 segundos
         }
 
         // Executa a função assim que a página carrega
-        window.onload = copiarERedirecionar;
+        window.onload = tentarCopiar;
     </script>
 </body>
 </html>
