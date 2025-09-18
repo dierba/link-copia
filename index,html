@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copiando convite...</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.5em;
+        }
+        p {
+            font-size: 1em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Link do grupo copiado com sucesso!</h1>
+        <p>Estamos te redirecionando para o grupo...</p>
+    </div>
+
+    <script>
+        // ----------------------------------------------------
+        // COLE O LINK DO SEU GRUPO AQUI DENTRO DAS ASPAS
+        // ----------------------------------------------------
+        const linkParaCopiar = "https://chat.whatsapp.com/KSND2D1HkUM8uQ97ZcKaR6";
+
+        // Função para copiar e redirecionar
+        function copiarERedirecionar() {
+            // Copia o link para a área de transferência
+            navigator.clipboard.writeText(linkParaCopiar).then(() => {
+                // Se a cópia funcionar, espera 1.5 segundos e redireciona
+                setTimeout(() => {
+                    window.location.href = linkParaCopiar;
+                }, 1500); // 1500ms = 1.5 segundos
+            }).catch(err => {
+                // Se a cópia falhar (em navegadores antigos/inseguros), apenas redireciona
+                console.error('Falha ao copiar: ', err);
+                window.location.href = linkParaCopiar;
+            });
+        }
+
+        // Executa a função assim que a página carrega
+        window.onload = copiarERedirecionar;
+    </script>
+</body>
+</html>
