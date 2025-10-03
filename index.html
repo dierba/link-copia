@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convite para o Grupo</title>
+    <title>Empório das Ofertas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
@@ -28,8 +28,8 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
         }
         .avatar {
-            width: 90px;
-            height: 90px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
             margin-bottom: 20px;
@@ -37,91 +37,138 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         h1 {
-            font-size: 1.6em;
+            font-size: 1.8em;
             font-weight: 700;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            color: #1c1e21;
         }
-        .step {
-            margin-bottom: 25px;
-        }
-        .step-label {
-            font-weight: 700;
+        .button {
+            width: 100%;
+            padding: 16px;
             font-size: 1.1em;
-            color: #000;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-        .copy-area {
-            display: flex;
-            gap: 10px;
-        }
-        .link-box {
-            flex-grow: 1;
-            padding: 12px;
-            font-size: 1em;
-            text-align: left;
-            border: 1px solid #dddfe2;
-            border-radius: 8px;
-            background-color: #f5f6f7;
-            color: #333;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .copy-button {
-            padding: 12px 20px;
-            font-size: 1em;
             font-weight: bold;
-            color: #fff;
-            background-color: #007bff;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            margin-bottom: 15px;
         }
-        .copy-button:hover {
-            background-color: #0056b3;
+        .button-primary {
+            color: #fff;
+            background-color: #25D366;
+        }
+        .button-primary:hover {
+            background-color: #1fb355;
+        }
+        .button-secondary {
+            color: #606770;
+            background-color: #f5f6f7;
+            border: 1px solid #dddfe2;
+        }
+        .button-secondary:hover {
+            background-color: #e4e6eb;
+        }
+        .button-secondary.copied {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
         }
         .instructions {
-            list-style-type: none;
-            padding-left: 0;
-            margin: 0;
-            text-align: left;
-            font-size: 1em;
+            font-size: 0.9em;
             color: #606770;
+            line-height: 1.6;
+            margin-top: 20px;
+            padding: 0 10px;
         }
-        .instructions li {
-            margin-bottom: 8px;
-            line-height: 1.5;
+        .instructions a {
+            color: #007bff;
+            text-decoration: none;
         }
-        .instructions strong {
+        .instructions a:hover {
+            text-decoration: underline;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 90%;
+            max-height: 90%;
+            text-align: center;
+            position: relative;
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #1c1e21;
+        }
+        .qrcode-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #606770;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            line-height: 1;
+        }
+        .close-button:hover {
             color: #1c1e21;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img src="https://i.imgur.com/ZytfR9s.png" alt="Avatar" class="avatar">
+        <img src="https://imgur.com/a/l16W6eY" alt="Ô Tio Garimpeiro de Ofertas" class="avatar">
 
-        <h1>Siga os Passos Abaixo</h1>
+        <h1>Ô Tio Garimpeiro de Ofertas</h1>
 
-        <div class="step">
-            <div class="step-label">Passo 1: Copie o link do grupo</div>
-            <div class="copy-area">
-                <input type="text" id="link-input" class="link-box" readonly onclick="this.select();">
-                <button class="copy-button" onclick="copiarLinkManualmente()">Copiar</button>
-            </div>
+        <button class="button button-primary" onclick="entrarNoGrupo()">
+            Entrar no grupo
+        </button>
+
+        <button class="button button-secondary" id="copyButton" onclick="copiarLink()">
+            Copiar o link do grupo
+        </button>
+
+        <p class="instructions">
+            Caso esteja com problemas para entrar no grupo, abra o WhatsApp e cole o link em uma conversa. Então clique no link para abrir direto no grupo.<br>
+            <a href="#" onclick="mostrarQRCode(); return false;">Você pode clicar aqui para ver o QRCode.</a>
+        </p>
+    </div>
+
+    <!-- Modal do QRCode -->
+    <div id="qrcodeModal" class="modal" onclick="fecharModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-button" onclick="fecharModal()">&times;</button>
+            <h2>QR Code do Grupo</h2>
+            <img src="https://imgur.com/a/Cu8gjaa" alt="QR Code do Grupo" class="qrcode-image">
+            <p style="margin-top: 15px; color: #606770; font-size: 0.9em;">
+                Escaneie com a câmera do WhatsApp
+            </p>
         </div>
-
-        <div class="step">
-            <div class="step-label">Passo 2: Cole no WhatsApp para entrar</div>
-             <ul class="instructions">
-                <li><strong>1.</strong> Abra o seu WhatsApp.</li>
-                <li><strong>2.</strong> Escolha qualquer conversa e <strong>cole</strong> o link que você copiou, e envie a mensagem.</li>
-                <li><strong>3.</strong> O link vai aparecer azul na conversa. Agora é só <strong>clicar nele</strong> para entrar no grupo!</li>
-            </ul>
-        </div>
-
     </div>
 
     <script>
@@ -130,22 +177,35 @@
         // ----------------------------------------------------
         const linkDoGrupo = "https://bit.ly/EntreNoGrupoDoTio";
 
-        document.getElementById('link-input').value = linkDoGrupo;
+        function entrarNoGrupo() {
+            window.location.href = linkDoGrupo;
+        }
 
-        function copiarLinkManualmente() {
-            const copyButton = document.querySelector('.copy-button');
+        function copiarLink() {
+            const copyButton = document.getElementById('copyButton');
             navigator.clipboard.writeText(linkDoGrupo).then(() => {
                 copyButton.innerText = 'Copiado!';
-                copyButton.style.backgroundColor = '#28a745';
+                copyButton.classList.add('copied');
             }).catch(err => {
                 console.error('Falha ao tentar copiar: ', err);
                 copyButton.innerText = 'Falhou!';
                 copyButton.style.backgroundColor = '#dc3545';
             });
             setTimeout(() => {
-                copyButton.innerText = 'Copiar';
-                copyButton.style.backgroundColor = '#007bff';
+                copyButton.innerText = 'Copiar o link do grupo';
+                copyButton.classList.remove('copied');
+                copyButton.style.backgroundColor = '';
             }, 2000);
+        }
+
+        function mostrarQRCode() {
+            document.getElementById('qrcodeModal').classList.add('active');
+        }
+
+        function fecharModal(event) {
+            if (!event || event.target.id === 'qrcodeModal') {
+                document.getElementById('qrcodeModal').classList.remove('active');
+            }
         }
     </script>
 </body>
